@@ -141,7 +141,10 @@ alias cp='cp -i'
 alias mv='mv -i'
  
 alias mkdir='mkdir -p'
- 
+
+alias his='history 1 | grep'
+alias cdev='cd ~/Development'
+
 # sudo の後のコマンドでエイリアスを有効にする
 alias sudo='sudo '
  
