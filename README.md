@@ -1,1 +1,1 @@
-# zsh-setting
+# mac-initial-setting
