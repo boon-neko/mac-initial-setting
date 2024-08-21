@@ -129,8 +129,17 @@ setopt extended_glob
 ########################################
 # キーバインド
  
-# ^R で履歴検索をするときに * でワイルドカードを使用出来るようにする
-bindkey '^R' history-incremental-pattern-search-backward
+# peco利用
+function peco-history-selection() {
+    BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | peco`
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+
+zle -N peco-history-selection
+bindkey '^R' peco-history-selection
+
+
  
 ########################################
 # エイリアス
@@ -146,7 +155,7 @@ alias mkdir='mkdir -p'
 
 alias his='history 1 | grep'
 alias cdev='cd ~/Development'
-
+alias kc='kubectx | peco | xargs kubectx'
 # sudo の後のコマンドでエイリアスを有効にする
 alias sudo='sudo '
  

@@ -48,3 +48,9 @@ https://www.postman.com/
 
 ### asdf
 https://asdf-vm.com/
+
+### peco & tac
+```shell
+brew install peco
+brew install coreutils
+```
