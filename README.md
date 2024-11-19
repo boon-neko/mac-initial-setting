@@ -54,3 +54,6 @@ https://asdf-vm.com/
 brew install peco
 brew install coreutils
 ```
+
+### k9s
+https://github.com/derailed/k9s
