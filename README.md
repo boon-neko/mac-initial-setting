@@ -27,7 +27,7 @@ https://karabiner-elements.pqrs.org/
 https://ke-complex-modifications.pqrs.org/#japanese  
 外部キーボード接続中はmacのキーボードをオフに  
 Function Keyの設定をデフォルトに
-  
+右コマンドキーを英数・かなのトグルに変更する→https://misclog.jp/karabiner-elements/
 ## 開発系
 
 ### Homebrew
