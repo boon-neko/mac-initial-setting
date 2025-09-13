@@ -68,6 +68,9 @@ npm install -g @anthropic-ai/claude-code
 
 brew install uv
 ```
+パスを通す
+export PATH=$PATH:$(npm prefix --location=global)/bin
+.zshrcに追記
 ## Super Claude
 https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/Getting-Started/quick-start.md
 ```shell
