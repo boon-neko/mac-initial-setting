@@ -57,3 +57,21 @@ brew install coreutils
 
 ### k9s
 https://github.com/derailed/k9s
+
+### Claude Code
+```shell
+asdf plugin-add nodejs
+asdf install nodejs latest
+# asdf list all nodejs でバージョン確認も可能
+
+npm install -g @anthropic-ai/claude-code
+
+brew install uv
+```
+## Super Claude
+https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/Getting-Started/quick-start.md
+```shell
+uvx SuperClaude install
+```
+https://zenn.dev/karaage0703/articles/877f522cece23c
+参考
