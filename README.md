@@ -72,6 +72,6 @@ brew install uv
 export PATH=$PATH:$(npm prefix --location=global)/bin
 .zshrcに追記
 ## Super Claude
-https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/Getting-Started/quick-start.md
-参考
+https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/Getting-Started/quick-start.md  
+参考  
 https://qiita.com/tomada/items/2eb1b0623c9f59424235
