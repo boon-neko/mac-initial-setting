@@ -58,6 +58,13 @@ brew install coreutils
 ### k9s
 https://github.com/derailed/k9s
 
+### GitHub CLI (gh)
+```shell
+brew install gh
+gh auth login
+```
+GitHubの操作をCLIから実行可能（PR作成、Issue管理など）
+
 ### Claude Code
 ```shell
 asdf plugin-add nodejs
@@ -65,13 +72,18 @@ asdf install nodejs latest
 # asdf list all nodejs でバージョン確認も可能
 
 npm install -g @anthropic-ai/claude-code
-
-brew install uv
 ```
 パスを通す
 export PATH=$PATH:$(npm prefix --location=global)/bin
 .zshrcに追記
-## Super Claude
-https://github.com/SuperClaude-Org/SuperClaude_Framework/blob/master/Docs/Getting-Started/quick-start.md  
-参考  
-https://qiita.com/tomada/items/2eb1b0623c9f59424235
+
+#### Claude Code設定のセットアップ
+```shell
+# このリポジトリをクローン後、以下を実行
+./setup-claude.sh
+```
+`claude/`ディレクトリ内の以下の設定が`~/.claude/`にコピーされます：
+- `config/` - 基本設定ファイル（ルール、モード、MCP設定など）
+- `agents/` - カスタムエージェント設定
+- `skills/` - 各種スキル
+- `commands/` - カスタムコマンド

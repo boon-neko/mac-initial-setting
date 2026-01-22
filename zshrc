@@ -7,6 +7,7 @@ export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+# export PATH=$PATH:$(npm prefix --location=global)/bin
 
 # 色を使用出来るようにする
 autoload -Uz colors
@@ -22,8 +23,8 @@ SAVEHIST=1000000
 
 # 改変箇所_1
 # 時間表記の追加
-setopt extended_history
-alias history='history -t "%F %T"'
+# setopt extended_history
+# alias history='history -t "%F %T"'
 
 # プロンプト
 # 1行表示
