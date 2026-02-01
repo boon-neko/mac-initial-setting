@@ -50,6 +50,15 @@ if [ -d "${CLAUDE_CONFIG_DIR}" ]; then
     done
 fi
 
+# settings.jsonのコピー
+if [ -f "${CLAUDE_SOURCE_DIR}/settings.json" ]; then
+    echo ""
+    echo "⚙️ settings.jsonをコピーしています..."
+    cp "${CLAUDE_SOURCE_DIR}/settings.json" "${CLAUDE_HOME}/settings.json"
+    echo "  ✅ settings.json"
+    ((copied_files++))
+fi
+
 # エージェント設定のコピー
 if [ -d "${CLAUDE_AGENTS_DIR}" ]; then
     echo ""
@@ -73,7 +82,7 @@ fi
 # コマンド設定のコピー
 if [ -d "${CLAUDE_COMMANDS_DIR}" ]; then
     echo ""
-    echo "⚙️ コマンド設定をコピーしています..."
+    echo "🎮 コマンド設定をコピーしています..."
     cp -r "${CLAUDE_COMMANDS_DIR}"/* "${CLAUDE_HOME}/commands/" 2>/dev/null || true
     command_count=$(find "${CLAUDE_COMMANDS_DIR}" -type f 2>/dev/null | wc -l)
     echo "  ✅ ${command_count}個のコマンド"
@@ -86,11 +95,11 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "🎉 セットアップが完了しました！"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "📊 ${copied_count}個のファイルをインストールしました："
+echo "📊 ${copied_files}個のファイルをインストールしました："
 echo ""
 
 # インストールされたファイルをリスト表示
-for file in "${CLAUDE_HOME}"/*.md; do
+for file in "${CLAUDE_HOME}"/*.md "${CLAUDE_HOME}/settings.json"; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
         # ファイルサイズも表示
