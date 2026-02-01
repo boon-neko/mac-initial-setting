@@ -8,6 +8,27 @@ set -e
 echo "🚀 Claude Code設定のセットアップを開始します..."
 echo ""
 
+# mise のインストール確認
+echo "🔧 mise のインストールを確認しています..."
+if command -v mise &> /dev/null; then
+    echo "  ✅ mise は既にインストールされています ($(mise --version))"
+else
+    echo "  ⚠️ mise がインストールされていません"
+    if command -v brew &> /dev/null; then
+        echo "  📦 Homebrew を使用して mise をインストールします..."
+        brew install mise
+        echo "  ✅ mise のインストールが完了しました"
+        echo ""
+        echo "  💡 シェルにmiseを有効化するには以下を~/.zshrcに追加してください:"
+        echo '     eval "$(mise activate zsh)"'
+    else
+        echo "  ❌ Homebrew がインストールされていません"
+        echo "  💡 Homebrew をインストール後、以下を実行してください:"
+        echo "     brew install mise"
+    fi
+fi
+echo ""
+
 # GitHub CLI (gh) のインストール確認
 echo "🔧 GitHub CLI (gh) のインストールを確認しています..."
 if command -v gh &> /dev/null; then
