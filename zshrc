@@ -158,6 +158,7 @@ alias mkdir='mkdir -p'
 alias his='history 1 | grep'
 alias cdev='cd ~/Development'
 alias kc='kubectx | peco | xargs kubectx'
+alias clauded='claude --dangerously-skip-permissions'
 # sudo の後のコマンドでエイリアスを有効にする
 alias sudo='sudo '
  
