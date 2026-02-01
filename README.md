@@ -82,6 +82,10 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 # このリポジトリをクローン後、以下を実行
 ./setup-claude.sh
 ```
+このスクリプトは以下を実行します：
+- **GitHub CLI (gh) のインストール確認** - 未インストールの場合はHomebrewでインストール
+- `claude/`ディレクトリ内の設定を`~/.claude/`にコピー
+
 `claude/`ディレクトリ内の以下の設定が`~/.claude/`にコピーされます：
 - `config/` - 基本設定ファイル（ルール、モード、MCP設定など）
 - `agents/` - カスタムエージェント設定

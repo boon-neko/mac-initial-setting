@@ -8,6 +8,28 @@ set -e
 echo "🚀 Claude Code設定のセットアップを開始します..."
 echo ""
 
+# GitHub CLI (gh) のインストール確認
+echo "🔧 GitHub CLI (gh) のインストールを確認しています..."
+if command -v gh &> /dev/null; then
+    echo "  ✅ GitHub CLI は既にインストールされています ($(gh --version | head -n 1))"
+else
+    echo "  ⚠️ GitHub CLI がインストールされていません"
+    if command -v brew &> /dev/null; then
+        echo "  📦 Homebrew を使用して GitHub CLI をインストールします..."
+        brew install gh
+        echo "  ✅ GitHub CLI のインストールが完了しました"
+        echo ""
+        echo "  💡 GitHub認証を設定するには以下を実行してください:"
+        echo "     gh auth login"
+    else
+        echo "  ❌ Homebrew がインストールされていません"
+        echo "  💡 Homebrew をインストール後、以下を実行してください:"
+        echo "     brew install gh"
+        echo "     gh auth login"
+    fi
+fi
+echo ""
+
 # スクリプトのディレクトリを取得
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_HOME="${HOME}/.claude"
