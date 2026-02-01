@@ -1,30 +1,24 @@
 # License : MIT
 # http://mollifier.mit-license.org/
- 
+
 ########################################
 # 環境変数
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-# export PATH=$PATH:$(npm prefix --location=global)/bin
 
 # 色を使用出来るようにする
 autoload -Uz colors
 colors
- 
+
 # emacs 風キーバインドにする
 bindkey -e
- 
+
 # ヒストリの設定
 HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
 
-# 改変箇所_1
-# 時間表記の追加
-# setopt extended_history
-# alias history='history -t "%F %T"'
 
 # プロンプト
 # 1行表示
@@ -34,18 +28,7 @@ SAVEHIST=1000000
 PROMPT="%{${fg[blue]}%}%n:%{${reset_color}%} %c/ %# "
 # 2行表示
 # PROMPT="%{${fg[green]}%}[%n@%m]%{${reset_color}%} %~
-# %# " 
-
-# 改変箇所_3
-# 出力の後に改行を入れる
-function add_line {
-  if [[ -z "${PS1_NEWLINE_LOGIN}" ]]; then
-    PS1_NEWLINE_LOGIN=true
-  else
-    printf '\n'
-  fi
-}
-PROMPT_COMMAND='add_line'
+# %# "
  
 # 単語の区切り文字を指定する
 autoload -Uz select-word-style
@@ -158,6 +141,9 @@ alias mkdir='mkdir -p'
 alias his='history 1 | grep'
 alias cdev='cd ~/Development'
 alias kc='kubectx | peco | xargs kubectx'
+alias kn='kubens | peco | xargs kubens'
+alias gauth='gcloud auth'
+alias gautha='gcloud auth application-default login'
 alias clauded='claude --dangerously-skip-permissions'
 # sudo の後のコマンドでエイリアスを有効にする
 alias sudo='sudo '
@@ -229,3 +215,12 @@ fi
 if [ -f ~/.zsh/spaceship-prompt/spaceship-prompt.zsh ]; then
   source ~/.zsh/spaceship-prompt/spaceship-prompt.zsh
 fi
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/completion.zsh.inc'; fi
+
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
