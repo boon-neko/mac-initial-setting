@@ -14,26 +14,13 @@ This document defines the project's rules, objectives, and progress management m
 - When coding in Go, please do not use `any` or `interface{}` for argument types except for generic utility functions.**
 - When writing comments for code, please write them in Japanese.**
 
-# ═══════════════════════════════════════════════════
-# SuperClaude Framework Components
-# ═══════════════════════════════════════════════════
+## Skill Creation Rules
 
-# Core Framework
-@BUSINESS_PANEL_EXAMPLES.md
-@BUSINESS_SYMBOLS.md
-@FLAGS.md
-@PRINCIPLES.md
-@RULES.md
-
-# Behavioral Modes
-@MODE_Brainstorming.md
-@MODE_Business_Panel.md
-@MODE_Introspection.md
-@MODE_Orchestration.md
-@MODE_Task_Management.md
-@MODE_Token_Efficiency.md
+- スキルを作成する際は、**グローバルスキル**か**プロジェクト固有スキル**かを判断すること
+  - グローバル（`~/.claude/skills/`）: 複数プロジェクトで使える汎用的なもの
+  - プロジェクト（`.claude/skills/`）: 特定プロジェクト固有のもの
+- 判断に迷ったらユーザーに確認すること
 
 # MCP Documentation
 @MCP_Context7.md
 @MCP_Playwright.md
-@MCP_Serena.md
