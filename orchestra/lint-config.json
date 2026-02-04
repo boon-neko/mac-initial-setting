@@ -1,0 +1,29 @@
+{
+  "linters": {
+    ".py": {
+      "format": ["uv", "run", "ruff", "format", "{file}"],
+      "check": ["uv", "run", "ruff", "check", "--fix", "{file}"],
+      "type_check": ["uv", "run", "ty", "check", "{file}"]
+    },
+    ".ts": {
+      "format": ["npx", "prettier", "--write", "{file}"],
+      "check": ["npx", "eslint", "--fix", "{file}"]
+    },
+    ".tsx": {
+      "format": ["npx", "prettier", "--write", "{file}"],
+      "check": ["npx", "eslint", "--fix", "{file}"]
+    },
+    ".js": {
+      "format": ["npx", "prettier", "--write", "{file}"],
+      "check": ["npx", "eslint", "--fix", "{file}"]
+    },
+    ".jsx": {
+      "format": ["npx", "prettier", "--write", "{file}"],
+      "check": ["npx", "eslint", "--fix", "{file}"]
+    },
+    ".go": {
+      "format": ["gofmt", "-w", "{file}"],
+      "check": ["golangci-lint", "run", "{file}"]
+    }
+  }
+}

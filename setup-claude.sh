@@ -152,5 +152,27 @@ for file in "${CLAUDE_HOME}"/*.md "${CLAUDE_HOME}/settings.json"; do
 done
 
 echo ""
+echo "🎭 Checking Orchestra CLI tools..."
+echo "=================================="
+
+# Codex CLI
+if command -v codex &> /dev/null; then
+    echo "✅ Codex CLI: $(codex --version 2>/dev/null || echo 'installed')"
+else
+    echo "⚠️  Codex CLI: not installed"
+    echo "   Install: npm install -g @openai/codex"
+    echo "   Login:   codex login"
+fi
+
+# Gemini CLI
+if command -v gemini &> /dev/null; then
+    echo "✅ Gemini CLI: $(gemini --version 2>/dev/null || echo 'installed')"
+else
+    echo "⚠️  Gemini CLI: not installed"
+    echo "   Install: npm install -g @google/gemini-cli"
+    echo "   Login:   gemini login"
+fi
+
+echo ""
 echo "💡 Claude Codeを再起動すると設定が反映されます"
 echo ""

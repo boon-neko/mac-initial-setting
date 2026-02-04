@@ -91,3 +91,27 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 - `agents/` - カスタムエージェント設定
 - `skills/` - 各種スキル
 - `commands/` - カスタムコマンド
+
+## Claude Code Orchestra
+
+マルチエージェント協調環境のテンプレート。Claude Code、Codex CLI、Gemini CLI を連携させます。
+
+### 前提条件
+
+```bash
+# CLI ツールのインストール
+npm install -g @openai/codex @google/gemini-cli
+
+# ログイン
+codex login
+gemini login
+```
+
+### プロジェクトへの導入
+
+```bash
+# 対象プロジェクトのルートで実行
+/path/to/mac-initial-setting/orchestra/setup-orchestra.sh .
+```
+
+詳細は [orchestra/README.md](orchestra/README.md) を参照してください。
