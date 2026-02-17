@@ -151,6 +151,21 @@ for file in "${CLAUDE_HOME}"/*.md "${CLAUDE_HOME}/settings.json"; do
     fi
 done
 
+# clauded エイリアスの追加
+echo ""
+echo "🔧 clauded エイリアスを確認しています..."
+ZSHRC="${HOME}/.zshrc"
+CLAUDED_ALIAS="alias clauded='claude --dangerously-skip-permissions'"
+
+if [ -f "$ZSHRC" ] && grep -q "clauded" "$ZSHRC"; then
+    echo "  ✅ clauded エイリアスは既に設定済みです"
+else
+    echo "" >> "$ZSHRC"
+    echo "# Claude Code shortcut" >> "$ZSHRC"
+    echo "$CLAUDED_ALIAS" >> "$ZSHRC"
+    echo "  ✅ clauded エイリアスを ~/.zshrc に追加しました"
+fi
+
 echo ""
 echo "🎭 Checking Orchestra CLI tools..."
 echo "=================================="
