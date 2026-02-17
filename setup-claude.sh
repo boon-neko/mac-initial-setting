@@ -174,5 +174,42 @@ else
 fi
 
 echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🎭 Orchestra セットアップ"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "Orchestra は Claude Code + Codex CLI + Gemini CLI の"
+echo "マルチエージェント連携フレームワークです。"
+echo ""
+read -p "🎭 Orchestra をインストールしますか？ [y/N]: " install_orchestra
+
+if [[ "$install_orchestra" =~ ^[Yy]$ ]]; then
+    ORCHESTRA_SCRIPT="${SCRIPT_DIR}/orchestra/setup-orchestra.sh"
+
+    if [ ! -f "$ORCHESTRA_SCRIPT" ]; then
+        echo "  ❌ orchestra/setup-orchestra.sh が見つかりません"
+        exit 1
+    fi
+
+    echo ""
+    read -p "📂 対象プロジェクトのパスを入力してください（デフォルト: カレントディレクトリ）: " orchestra_target
+    orchestra_target="${orchestra_target:-.}"
+
+    # パスの存在確認
+    if [ ! -d "$orchestra_target" ]; then
+        echo "  ❌ ディレクトリが見つかりません: $orchestra_target"
+        exit 1
+    fi
+
+    echo ""
+    bash "$ORCHESTRA_SCRIPT" "$orchestra_target"
+else
+    echo ""
+    echo "⏭️  Orchestra のインストールをスキップしました"
+    echo "   後からインストールする場合:"
+    echo "   ./orchestra/setup-orchestra.sh <対象プロジェクトのパス>"
+fi
+
+echo ""
 echo "💡 Claude Codeを再起動すると設定が反映されます"
 echo ""
