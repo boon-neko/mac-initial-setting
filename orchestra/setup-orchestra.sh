@@ -13,42 +13,87 @@ echo "🎭 Setting up Claude Code Orchestra..."
 echo "Target: $TARGET_DIR"
 echo ""
 
-# 1. .claude/hooks/ にコピー
+# ── CLI ツールの確認 ──────────────────────────
+echo "🔧 Checking Orchestra CLI tools..."
+echo ""
+
+# Codex CLI
+if command -v codex &> /dev/null; then
+    echo "  ✅ Codex CLI: $(codex --version 2>/dev/null || echo 'installed')"
+else
+    echo "  ⚠️  Codex CLI: not installed"
+    echo "     Install: npm install -g @openai/codex"
+    echo "     Login:   codex login"
+fi
+
+# Gemini CLI
+if command -v gemini &> /dev/null; then
+    echo "  ✅ Gemini CLI: $(gemini --version 2>/dev/null || echo 'installed')"
+else
+    echo "  ⚠️  Gemini CLI: not installed"
+    echo "     Install: npm install -g @google/gemini-cli"
+    echo "     Login:   gemini login"
+fi
+
+echo ""
+
+# ── Hooks ──────────────────────────────────
 echo "📁 Copying hooks..."
 mkdir -p "$TARGET_DIR/.claude/hooks"
 cp -r "$SCRIPT_DIR/claude/hooks/"* "$TARGET_DIR/.claude/hooks/"
-echo "   ✅ Copied 8 hook scripts"
+hook_count=$(find "$SCRIPT_DIR/claude/hooks" -type f | wc -l | tr -d ' ')
+echo "   ✅ Copied ${hook_count} hook scripts"
 
-# 2. .claude/rules/ にコピー
+# ── Delegation Rules ───────────────────────
 echo "📁 Copying delegation rules..."
 mkdir -p "$TARGET_DIR/.claude/rules"
 cp -r "$SCRIPT_DIR/claude/rules/"* "$TARGET_DIR/.claude/rules/"
 echo "   ✅ Copied delegation rules"
 
-# 3. .claude/docs/ と .claude/logs/ 作成
+# ── Docs & Logs ────────────────────────────
 mkdir -p "$TARGET_DIR/.claude/docs/research"
+mkdir -p "$TARGET_DIR/.claude/docs/libraries"
 mkdir -p "$TARGET_DIR/.claude/logs"
 touch "$TARGET_DIR/.claude/docs/research/.gitkeep"
+touch "$TARGET_DIR/.claude/docs/libraries/.gitkeep"
 touch "$TARGET_DIR/.claude/logs/.gitkeep"
-echo "   ✅ Created docs/research/ and logs/ directories"
+echo "   ✅ Created docs/ and logs/ directories"
 
-# 4. lint-config.json コピー
+# ── lint-config.json ───────────────────────
 cp "$SCRIPT_DIR/lint-config.json" "$TARGET_DIR/.claude/"
 echo "   ✅ Copied lint-config.json"
 
-# 5. .codex/ にコピー
+# ── Skills ─────────────────────────────────
+echo "📁 Copying skills..."
+if [ -d "$SCRIPT_DIR/claude/skills" ]; then
+    mkdir -p "$TARGET_DIR/.claude/skills"
+    cp -r "$SCRIPT_DIR/claude/skills/"* "$TARGET_DIR/.claude/skills/"
+    skill_count=$(find "$SCRIPT_DIR/claude/skills" -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')
+    echo "   ✅ Copied ${skill_count} skills"
+fi
+
+# ── Commands ───────────────────────────────
+echo "📁 Copying commands..."
+if [ -d "$SCRIPT_DIR/claude/commands" ]; then
+    mkdir -p "$TARGET_DIR/.claude/commands"
+    cp -r "$SCRIPT_DIR/claude/commands/"* "$TARGET_DIR/.claude/commands/"
+    command_count=$(find "$SCRIPT_DIR/claude/commands" -type f -name '*.md' | wc -l | tr -d ' ')
+    echo "   ✅ Copied ${command_count} commands"
+fi
+
+# ── Codex 設定 ─────────────────────────────
 echo "📁 Copying Codex configuration..."
 mkdir -p "$TARGET_DIR/.codex/skills/context-loader"
 cp -r "$SCRIPT_DIR/codex/"* "$TARGET_DIR/.codex/"
 echo "   ✅ Copied .codex/"
 
-# 6. .gemini/ にコピー
+# ── Gemini 設定 ────────────────────────────
 echo "📁 Copying Gemini configuration..."
 mkdir -p "$TARGET_DIR/.gemini/skills/context-loader"
 cp -r "$SCRIPT_DIR/gemini/"* "$TARGET_DIR/.gemini/"
 echo "   ✅ Copied .gemini/"
 
-# 7. settings.json に hooks をマージ
+# ── settings.json に hooks をマージ ────────
 echo ""
 echo "🔧 Merging hooks into settings.json..."
 
@@ -76,7 +121,7 @@ else
     echo "   ✅ Created settings.json with hooks"
 fi
 
-# 8. .gitignore 追加推奨
+# ── .gitignore 推奨 ────────────────────────
 echo ""
 echo "📝 Recommended .gitignore additions:"
 echo "   .claude/logs/"
@@ -84,6 +129,14 @@ echo "   .claude/settings.json.backup"
 
 echo ""
 echo "✨ Orchestra setup complete!"
+echo ""
+echo "📊 Installed components:"
+echo "   • Hooks (agent-router, codex/gemini integration)"
+echo "   • Delegation rules (codex-delegation, gemini-delegation)"
+echo "   • Skills (startproject, codex-system, gemini-system, research-lib, subagent-driven-development)"
+echo "   • Commands (research, sc:spawn, sc:workflow, sc:task, sc:brainstorm)"
+echo "   • Codex CLI configuration"
+echo "   • Gemini CLI configuration"
 echo ""
 echo "💡 Next steps:"
 echo "   1. Review .claude/settings.json"

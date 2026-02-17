@@ -77,20 +77,28 @@ npm install -g @anthropic-ai/claude-code
 export PATH=$PATH:$(npm prefix --location=global)/bin
 .zshrcに追記
 
-#### Claude Code設定のセットアップ
+#### セットアップ
 ```shell
 # このリポジトリをクローン後、以下を実行
-./setup-claude.sh
+./setup.sh
 ```
-このスクリプトは以下を実行します：
-- **GitHub CLI (gh) のインストール確認** - 未インストールの場合はHomebrewでインストール
-- `claude/`ディレクトリ内の設定を`~/.claude/`にコピー
 
-`claude/`ディレクトリ内の以下の設定が`~/.claude/`にコピーされます：
-- `config/` - 基本設定ファイル（ルール、モード、MCP設定など）
-- `agents/` - カスタムエージェント設定
-- `skills/` - 各種スキル
-- `commands/` - カスタムコマンド
+メニューから選択してインストールします：
+
+| メニュー | 内容 |
+|----------|------|
+| **1) Claude Code 基本設定** | `~/.claude/` にグローバル設定（エージェント・スキル・コマンド等）をコピー |
+| **2) Orchestra セットアップ** | 対象プロジェクトに Orchestra マルチエージェント環境を構築 |
+| **3) すべてインストール** | 上記両方を実行 |
+
+#### 個別実行
+```shell
+# Claude 基本設定のみ
+./setup-claude.sh
+
+# Orchestra を特定プロジェクトに導入
+./orchestra/setup-orchestra.sh /path/to/project
+```
 
 ## Claude Code Orchestra
 
@@ -110,8 +118,18 @@ gemini login
 ### プロジェクトへの導入
 
 ```bash
-# 対象プロジェクトのルートで実行
-/path/to/mac-initial-setting/orchestra/setup-orchestra.sh .
+# setup.sh のメニュー「2) Orchestra セットアップ」を選択するか、直接実行：
+./orchestra/setup-orchestra.sh /path/to/project
 ```
+
+### Orchestra で追加されるもの
+
+| カテゴリ | 内容 |
+|----------|------|
+| **Hooks** | agent-router, codex/gemini 連携フック |
+| **Rules** | Codex/Gemini デリゲーションルール |
+| **Skills** | startproject, codex-system, gemini-system, research-lib, subagent-driven-development |
+| **Commands** | /research, /sc:spawn, /sc:workflow, /sc:task, /sc:brainstorm |
+| **CLI設定** | Codex CLI / Gemini CLI の設定 |
 
 詳細は [orchestra/README.md](orchestra/README.md) を参照してください。
