@@ -1,0 +1,51 @@
+{
+  "extensions.verifySignature": false,
+
+  // Claude Code
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.allowDangerouslySkipPermissions": true,
+  "claudeCode.initialPermissionMode": "bypassPermissions",
+
+  // Editor
+  "editor.fontSize": 13,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": null,
+  "terminal.integrated.fontSize": 13,
+
+  // Python
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "python.analysis.typeCheckingMode": "basic",
+
+  // Go
+  "go.useLanguageServer": true,
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+
+  // Proto
+  "[proto3]": {
+    "editor.defaultFormatter": "zxh404.vscode-proto3"
+  },
+
+  // Files
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/*.pyc": true,
+    ".venv": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.venv": true,
+    "**/vendor": true
+  },
+
+  // Theme
+  "workbench.iconTheme": "material-icon-theme"
+}

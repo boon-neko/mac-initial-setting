@@ -1,0 +1,31 @@
+# Core
+anthropic.claude-code
+golang.go
+ms-python.python
+ms-python.vscode-pylance
+charliermarsh.ruff
+k--kato.intellij-idea-keybindings
+ms-ceintl.vscode-language-pack-ja
+
+# Frontend
+bradlc.vscode-tailwindcss
+yoavbls.pretty-ts-errors
+wix.vscode-import-cost
+
+# DevOps / DB
+ms-azuretools.vscode-docker
+mtxr.sqltools
+mtxr.sqltools-driver-pg
+zxh404.vscode-proto3
+
+# Productivity
+eamodio.gitlens
+usernamehw.errorlens
+christian-kohler.path-intellisense
+gruntfuggly.todo-tree
+streetsidesoftware.code-spell-checker
+mechatroner.rainbow-csv
+
+# Appearance
+pkief.material-icon-theme
+johnpapa.vscode-peacock
