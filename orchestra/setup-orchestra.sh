@@ -58,14 +58,14 @@ else
             # settings.json で認証方式を api-key に設定
             GEMINI_SETTINGS="${HOME}/.gemini/settings.json"
             if [ -f "$GEMINI_SETTINGS" ] && command -v jq &> /dev/null; then
-                jq '.security.auth.selectedType = "api-key"' "$GEMINI_SETTINGS" > "$GEMINI_SETTINGS.tmp"
+                jq '.security.auth.selectedType = "gemini-api-key"' "$GEMINI_SETTINGS" > "$GEMINI_SETTINGS.tmp"
                 mv "$GEMINI_SETTINGS.tmp" "$GEMINI_SETTINGS"
             else
                 cat > "$GEMINI_SETTINGS" << 'SETTINGS_EOF'
 {
   "security": {
     "auth": {
-      "selectedType": "api-key"
+      "selectedType": "gemini-api-key"
     }
   }
 }
