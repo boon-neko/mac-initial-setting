@@ -37,6 +37,36 @@ fi
 
 echo ""
 
+# ── API キー設定 ──────────────────────────────
+echo "🔑 Checking API keys..."
+ZSHRC="${HOME}/.zshrc"
+
+if grep -q "GEMINI_API_KEY" "$ZSHRC" 2>/dev/null; then
+    echo "  ✅ GEMINI_API_KEY is already configured in ~/.zshrc"
+else
+    echo ""
+    echo "  Gemini CLI をAPIキー認証で使用すると、データがモデル学習に利用されません。"
+    echo "  APIキーは Google AI Studio で発行できます: https://aistudio.google.com/apikey"
+    echo ""
+    read -p "  🔑 GEMINI_API_KEY を設定しますか？ [Y/n]: " setup_gemini_key
+    if [[ ! "$setup_gemini_key" =~ ^[Nn]$ ]]; then
+        read -sp "  🔑 GEMINI_API_KEY を入力してください: " gemini_key
+        echo ""
+        if [ -n "$gemini_key" ]; then
+            echo "" >> "$ZSHRC"
+            echo "# Gemini API Key (for Gemini CLI)" >> "$ZSHRC"
+            echo "export GEMINI_API_KEY=\"${gemini_key}\"" >> "$ZSHRC"
+            echo "  ✅ GEMINI_API_KEY を ~/.zshrc に追加しました"
+        else
+            echo "  ⏭️  スキップしました（空の入力）"
+        fi
+    else
+        echo "  ⏭️  スキップしました"
+    fi
+fi
+
+echo ""
+
 # ── Hooks ──────────────────────────────────
 echo "📁 Copying hooks..."
 mkdir -p "$TARGET_DIR/.claude/hooks"
