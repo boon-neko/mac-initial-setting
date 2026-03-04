@@ -39,10 +39,10 @@ echo ""
 
 # ── API キー設定 ──────────────────────────────
 echo "🔑 Checking API keys..."
-ZSHRC="${HOME}/.zshrc"
+GEMINI_ENV="${HOME}/.gemini/.env"
 
-if grep -q "GEMINI_API_KEY" "$ZSHRC" 2>/dev/null; then
-    echo "  ✅ GEMINI_API_KEY is already configured in ~/.zshrc"
+if [ -f "$GEMINI_ENV" ] && grep -q "GEMINI_API_KEY" "$GEMINI_ENV" 2>/dev/null; then
+    echo "  ✅ GEMINI_API_KEY is already configured in ~/.gemini/.env"
 else
     echo ""
     echo "  Gemini CLI をAPIキー認証で使用すると、データがモデル学習に利用されません。"
@@ -53,10 +53,9 @@ else
         read -sp "  🔑 GEMINI_API_KEY を入力してください: " gemini_key
         echo ""
         if [ -n "$gemini_key" ]; then
-            echo "" >> "$ZSHRC"
-            echo "# Gemini API Key (for Gemini CLI)" >> "$ZSHRC"
-            echo "export GEMINI_API_KEY=\"${gemini_key}\"" >> "$ZSHRC"
-            echo "  ✅ GEMINI_API_KEY を ~/.zshrc に追加しました"
+            mkdir -p "${HOME}/.gemini"
+            echo "GEMINI_API_KEY=\"${gemini_key}\"" >> "$GEMINI_ENV"
+            echo "  ✅ GEMINI_API_KEY を ~/.gemini/.env に追加しました"
         else
             echo "  ⏭️  スキップしました（空の入力）"
         fi
