@@ -55,7 +55,24 @@ else
         if [ -n "$gemini_key" ]; then
             mkdir -p "${HOME}/.gemini"
             echo "GEMINI_API_KEY=\"${gemini_key}\"" >> "$GEMINI_ENV"
+            # settings.json で認証方式を api-key に設定
+            GEMINI_SETTINGS="${HOME}/.gemini/settings.json"
+            if [ -f "$GEMINI_SETTINGS" ] && command -v jq &> /dev/null; then
+                jq '.security.auth.selectedType = "api-key"' "$GEMINI_SETTINGS" > "$GEMINI_SETTINGS.tmp"
+                mv "$GEMINI_SETTINGS.tmp" "$GEMINI_SETTINGS"
+            else
+                cat > "$GEMINI_SETTINGS" << 'SETTINGS_EOF'
+{
+  "security": {
+    "auth": {
+      "selectedType": "api-key"
+    }
+  }
+}
+SETTINGS_EOF
+            fi
             echo "  ✅ GEMINI_API_KEY を ~/.gemini/.env に追加しました"
+            echo "  ✅ 認証方式を api-key に設定しました"
         else
             echo "  ⏭️  スキップしました（空の入力）"
         fi
