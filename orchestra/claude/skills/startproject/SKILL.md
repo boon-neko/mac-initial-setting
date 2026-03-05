@@ -22,6 +22,8 @@ Phase 1: Research (Gemini via Subagent)
     ↓
 Phase 2: Requirements & Planning (Claude)
     ↓
+Phase 2.5: Data Model Design Analysis (Claude) ← データモデルが関わる場合のみ
+    ↓
 Phase 3: Design Review (Codex via Subagent)
     ↓
 Phase 4: Task Creation (Claude)
@@ -75,6 +77,75 @@ Ask in Japanese:
 4. **成功基準**: 完了の判断基準は？
 
 **Draft implementation plan based on Gemini research + user answers.**
+
+---
+
+## Phase 2.5: Data Model Design Analysis (Claude)
+
+**データモデルが関わる機能では、Codexレビュー前に必ずモデル設計を検証する。**
+
+### いつ実行するか
+
+以下のいずれかに該当する場合に実行：
+
+- ステータス・カテゴリの列挙型を設計するとき
+- エンティティ間のリレーションを定義するとき
+- 1つのフィールドで複数の概念を表現しようとするとき
+- ユーザーが「〜状態」「〜種別」「〜フラグ」の設計を提案してきたとき
+
+### チェック項目
+
+**1. 軸の混在チェック（最重要）**
+
+提案された設計が「異なる軸」を1つのフィールドに混ぜていないか確認する。
+
+```
+例：「注文ステータス」の設計で
+  - 「受付済」「処理中」「発送済」「完了」 → 進捗状態（軸A）
+  - 「通常」「優先」「緊急」              → 優先度（軸B）
+
+これらを1つのフィールドに混ぜると概念が崩壊する。
+```
+
+**2. 正規化チェック**
+
+- 1つの事実が複数の場所に存在しないか
+- 更新時に複数レコードを変更する必要がないか
+- NULL が多発する設計になっていないか
+
+**3. スケール確認**
+
+- 将来的に軸が増える可能性はないか
+- 「2軸分離」が必要か「フラット統合」で済むか
+
+### ユーザーへの提示方法
+
+設計の問題を発見したら、**代替案を並べて比較提示**する：
+
+```markdown
+## データモデル設計の確認
+
+提案された設計に軸の混在が見られます。以下の2案を比較してください。
+
+### 案A: フラット統合（提案通り）
+\`\`\`sql
+status ENUM('pending', 'processing', 'shipped', 'completed', 'normal', 'priority', 'urgent')
+\`\`\`
+- メリット: シンプル、フィールドが1つ
+- デメリット: 「処理中」と「優先」が同時に成立できない
+
+### 案B: 2軸分離（推奨）
+\`\`\`sql
+order_status ENUM('pending', 'processing', 'shipped', 'completed')  -- 進捗
+priority     ENUM('normal', 'priority', 'urgent')                    -- 優先度
+\`\`\`
+- メリット: 「処理中で優先」「完了で通常」など自然に表現できる
+- デメリット: フィールドが2つになる
+
+どちらの設計で進めますか？
+```
+
+**ユーザー確認後、次のPhaseへ進む。**
 
 ---
 
@@ -242,3 +313,4 @@ Present final plan to user (in Japanese):
 - **Update CLAUDE.md** to persist context across sessions
 - **Use multi-session review** for better quality assurance
 - **Ctrl+T**: Toggle task list visibility
+- **ステータス・カテゴリ設計は必ず軸の混在を疑う**: ユーザーが提案してきた設計をそのまま受け入れない。「これは進捗の軸か？評価の軸か？」を自問し、混在していれば Phase 2.5 で代替案を提示する
