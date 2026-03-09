@@ -17,6 +17,9 @@ Start by understanding the current project context, then ask questions one at a 
 - Check out the current project state first (files, docs, recent commits)
 - Ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
+- **Use `AskUserQuestion` tool** for all choice-based questions — it provides a proper selection UI
+- When a requirement is ambiguous or unspecified, do NOT assume — present options with `AskUserQuestion`
+- Use `preview` field when comparing concrete artifacts (data models, UI layouts, code patterns) — renders side-by-side with options on left and preview on right
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 

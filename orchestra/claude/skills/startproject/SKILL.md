@@ -67,9 +67,13 @@ Task tool parameters:
 
 ## Phase 2: Requirements Gathering (Claude)
 
-**ユーザーに質問して要件を明確化。**
+**brainstormingスキルの手法に従い、ユーザーに質問して要件を明確化。**
 
-Ask in Japanese:
+- 一度に1つの質問、選択式を優先（`AskUserQuestion` ツール使用）
+- 不明・曖昧な要件は推測せず、選択肢 + preview で比較提示
+- 推奨オプションは先頭に置き「(Recommended)」を付ける
+
+確認すべき項目:
 
 1. **目的**: 何を達成したいですか？
 2. **スコープ**: 含めるもの・除外するものは？
