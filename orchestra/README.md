@@ -138,6 +138,46 @@ your-project/
 | lint-on-save.py | PostToolUse (Edit/Write) | ファイル保存時にlinterを実行 |
 | log-cli-tools.py | PostToolUse (Bash) | Codex/Gemini呼び出しをログ記録 |
 
+## Skills 一覧
+
+plugin 導入時は `/orchestra:` プレフィックスで呼び出す（コピー方式なら `/` のみ）。
+「自動」は該当する作業を検知すると Claude が自動で読み込むもの。
+
+### 開発フロー
+
+| Skill | 説明 | 呼び方 |
+|-------|------|--------|
+| `requirements` | 要件定義書（AC・非ゴール・検証方法）を作成し「このACで完了か」の承認まで取る。フォーマットの正 | 手動 / startproject Phase 2 から |
+| `startproject` | 新機能開始の全フロー: Research → 要件定義 → 要件+計画レビュー → タスク化 → 永続化。実装後の要件適合レビュー（AC毎 PASS/FAIL）と完了報告形式もここで定義 | 手動 / sin-task・para-task から |
+| `sin-task` | タスク番号を指定した単体セッション実行の入口。S/M/L 規模トリアージ → startproject フロー → 実装 → レビュー → マージ | `/orchestra:sin-task 052` |
+| `para-task` | Worktree 並行実装版。承認済みのAC・計画を Worktree エージェントに委譲し、AC検証表で報告 | `/orchestra:para-task 052` |
+| `plan` | 実装計画書の単体作成（AC対応・検証計画付き） | 手動 |
+| `parallel-workflow` | Worktree + feature ブランチ運用の手順書（マージ方法・クリーンアップ） | para-task が参照 / 自動 |
+| `subagent-driven-development` | 計画をサブエージェントに分担実行させ、タスク間でコードレビューを挟む | 自動 |
+
+### AI 委譲
+
+| Skill | 説明 | 呼び方 |
+|-------|------|--------|
+| `codex-system` | Codex CLI への相談ルールとテンプレ（設計判断・デバッグ・トレードオフ・コードレビュー） | 自動 |
+| `gemini-system` | Gemini CLI への委譲ルール（リサーチ・大規模コードベース分析・PDF/動画/音声） | 自動 |
+| `research` | 技術調査: WebSearch + Gemini 壁打ち → レポートを research ディレクトリに保存 | `/orchestra:research <トピック>` |
+| `research-lib` | ライブラリを調査して `.claude/docs/libraries/` に永続ドキュメント化（以後のセッションが参照） | 手動 |
+
+### 言語別ガイドライン（linter で強制できない設計判断のみ）
+
+| Skill | 説明 | 呼び方 |
+|-------|------|--------|
+| `lang-go` | インターフェース設計・エラーラップ・並行処理・テーブル駆動テスト・禁止事項 | Go を書くと自動 |
+| `lang-python` | uv/ruff ワークフロー・型ヒント必須・pydantic 境界バリデーション・pytest 流儀 | Python を書くと自動 |
+| `lang-typescript` | strict 前提・unknown+narrowing・discriminated union・floating promise 禁止 | TS を書くと自動 |
+
+### Agents
+
+| Agent | 説明 |
+|-------|------|
+| `general-purpose` | Codex/Gemini を直接呼べる汎用サブエージェント。メインのコンテキストを守るため、重い相談・調査はこれ経由で行い要約だけ返す |
+
 ## lint-config.json のカスタマイズ
 
 プロジェクトに合わせて `.claude/lint-config.json` を編集：
