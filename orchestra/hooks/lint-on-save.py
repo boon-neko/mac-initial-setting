@@ -15,8 +15,8 @@ from pathlib import Path
 # 入力検証の定数
 MAX_PATH_LENGTH = 4096
 
-# lint-config.jsonの場所
-CONFIG_FILE = Path(__file__).parent.parent.parent / "lint-config.json"
+# lint-config.jsonの場所（プラグインルート直下）
+CONFIG_FILE = Path(__file__).parent.parent / "lint-config.json"
 
 
 def validate_path(file_path: str) -> bool:

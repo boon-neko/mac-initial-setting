@@ -1,0 +1,11 @@
+{
+  "name": "orchestra",
+  "displayName": "Claude Code Orchestra",
+  "description": "AC駆動の開発フロー（要件定義→計画→レビュー→実装→要件適合レビュー）と Codex/Gemini マルチエージェント協調。skills / hooks / agents を同梱。",
+  "version": "0.2.0",
+  "author": {
+    "name": "amoru"
+  },
+  "license": "MIT",
+  "keywords": ["workflow", "codex", "gemini", "spec-driven", "review"]
+}

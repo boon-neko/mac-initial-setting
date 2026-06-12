@@ -1,0 +1,15 @@
+{
+  "name": "mac-initial-setting",
+  "owner": {
+    "name": "amoru"
+  },
+  "description": "amoru の開発環境テンプレート: AC駆動開発フロー + マルチエージェント協調",
+  "plugins": [
+    {
+      "name": "orchestra",
+      "source": "./orchestra",
+      "description": "AC駆動の開発フロー（要件定義→計画→レビュー→実装→要件適合レビュー）と Codex/Gemini 協調の skills / hooks / agents",
+      "category": "workflow"
+    }
+  ]
+}

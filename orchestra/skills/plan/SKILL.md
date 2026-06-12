@@ -45,6 +45,13 @@ Break into small steps:
 ### Purpose
 {1-2 sentences}
 
+### Acceptance Criteria
+- **AC-1**: {単体で検証可能な完了条件（Given/When/Then 推奨）}
+- **AC-2**: ...
+
+### Non-Goals
+- {やらないこと。最低1つ}
+
 ### Scope
 - New files: {list}
 - Modified files: {list}
@@ -52,13 +59,18 @@ Break into small steps:
 
 ### Implementation Steps
 
-#### Step 1: {Title}
+#### Step 1: {Title}（対応AC: AC-1）
 - [ ] {Specific task}
 - [ ] {Specific task}
 **Verification**: {Completion criteria for this step}
 
-#### Step 2: {Title}
+#### Step 2: {Title}（対応AC: AC-2）
 ...
+
+### Verification Plan
+| AC | 検証手段 |
+|----|---------|
+| AC-1 | unit test / E2E / 手動確認（手順） |
 
 ### Risks & Considerations
 - {Potential issues and mitigations}
@@ -71,5 +83,7 @@ Break into small steps:
 
 - Plans should be at actionable granularity
 - Include verification method for each step
+- ACが未定義なら、先に `requirements` スキル（plugin では `/orchestra:requirements`）で定義し、その成果物を転記する
+- 全てのステップがいずれかのACに対応していること（対応しないステップはスコープ見直しのサイン）
 - Ask questions at planning stage for unclear points
 - Don't over-detail (adjust during implementation)

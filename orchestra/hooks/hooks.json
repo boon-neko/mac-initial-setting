@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-router.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/agent-router.py",
             "timeout": 5
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-codex-before-write.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/check-codex-before-write.py",
             "timeout": 10
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/require-plan-before-worktree.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require-plan-before-worktree.py",
             "timeout": 10
           }
         ]
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/suggest-gemini-research.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/suggest-gemini-research.py",
             "timeout": 5
           }
         ]
@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-codex-after-plan.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/check-codex-after-plan.py",
             "timeout": 10
           }
         ]
@@ -60,12 +60,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-test-analysis.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/post-test-analysis.py",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/log-cli-tools.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/log-cli-tools.py",
             "timeout": 5
           }
         ]
@@ -75,12 +75,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/lint-on-save.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/lint-on-save.py",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-implementation-review.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/post-implementation-review.py",
             "timeout": 10
           }
         ]

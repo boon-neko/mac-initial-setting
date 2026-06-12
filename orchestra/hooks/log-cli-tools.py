@@ -15,9 +15,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-LOG_DIR = Path(__file__).parent.parent / "logs"
-LOG_FILE = LOG_DIR / "cli-tools.jsonl"
-
 
 def extract_codex_prompt(command: str) -> str | None:
     """codex execコマンドからプロンプトを抽出する."""
@@ -64,14 +61,13 @@ def truncate_text(text: str, max_length: int = 2000) -> str:
 
 def log_entry(entry: dict) -> None:
     """エントリをJSONLログファイルに追記する."""
-    # プロジェクト固有のログディレクトリを使用
+    # プロジェクト固有のログディレクトリを使用（不明な場合は記録しない）
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
-    if project_dir:
-        log_dir = Path(project_dir) / ".claude" / "logs"
-        log_file = log_dir / "cli-tools.jsonl"
-    else:
-        log_dir = LOG_DIR
-        log_file = LOG_FILE
+    if not project_dir:
+        return
+
+    log_dir = Path(project_dir) / ".claude" / "logs"
+    log_file = log_dir / "cli-tools.jsonl"
 
     log_dir.mkdir(parents=True, exist_ok=True)
     with open(log_file, "a", encoding="utf-8") as f:

@@ -1,5 +1,11 @@
 #!/bin/bash
 # Orchestra テンプレートを対象プロジェクトにコピー＆マージ
+#
+# 推奨: Claude Code plugin としての導入（コピー乖離が起きない）
+#   claude plugin marketplace add <このリポジトリのパス or GitHub repo>
+#   claude plugin install orchestra@mac-initial-setting
+# このスクリプトは plugin を使わない場合のフォールバック。
+# plugin 導入時も .codex/.gemini 設定と lint-config.json は本スクリプトで配布する。
 
 set -e
 
@@ -86,14 +92,14 @@ echo ""
 # ── Hooks ──────────────────────────────────
 echo "📁 Copying hooks..."
 mkdir -p "$TARGET_DIR/.claude/hooks"
-cp -r "$SCRIPT_DIR/claude/hooks/"* "$TARGET_DIR/.claude/hooks/"
-hook_count=$(find "$SCRIPT_DIR/claude/hooks" -type f | wc -l | tr -d ' ')
+cp "$SCRIPT_DIR/hooks/"*.py "$TARGET_DIR/.claude/hooks/"
+hook_count=$(find "$SCRIPT_DIR/hooks" -type f -name '*.py' | wc -l | tr -d ' ')
 echo "   ✅ Copied ${hook_count} hook scripts"
 
 # ── Delegation Rules ───────────────────────
 echo "📁 Copying delegation rules..."
 mkdir -p "$TARGET_DIR/.claude/rules"
-cp -r "$SCRIPT_DIR/claude/rules/"* "$TARGET_DIR/.claude/rules/"
+cp -r "$SCRIPT_DIR/rules/"* "$TARGET_DIR/.claude/rules/"
 echo "   ✅ Copied delegation rules"
 
 # ── Docs & Logs ────────────────────────────
@@ -111,19 +117,19 @@ echo "   ✅ Copied lint-config.json"
 
 # ── Skills ─────────────────────────────────
 echo "📁 Copying skills..."
-if [ -d "$SCRIPT_DIR/claude/skills" ]; then
+if [ -d "$SCRIPT_DIR/skills" ]; then
     mkdir -p "$TARGET_DIR/.claude/skills"
-    cp -r "$SCRIPT_DIR/claude/skills/"* "$TARGET_DIR/.claude/skills/"
-    skill_count=$(find "$SCRIPT_DIR/claude/skills" -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')
+    cp -r "$SCRIPT_DIR/skills/"* "$TARGET_DIR/.claude/skills/"
+    skill_count=$(find "$SCRIPT_DIR/skills" -maxdepth 1 -mindepth 1 -type d | wc -l | tr -d ' ')
     echo "   ✅ Copied ${skill_count} skills"
 fi
 
 # ── Commands ───────────────────────────────
 echo "📁 Copying commands..."
-if [ -d "$SCRIPT_DIR/claude/commands" ]; then
+if [ -d "$SCRIPT_DIR/commands" ]; then
     mkdir -p "$TARGET_DIR/.claude/commands"
-    cp -r "$SCRIPT_DIR/claude/commands/"* "$TARGET_DIR/.claude/commands/"
-    command_count=$(find "$SCRIPT_DIR/claude/commands" -type f -name '*.md' | wc -l | tr -d ' ')
+    cp -r "$SCRIPT_DIR/commands/"* "$TARGET_DIR/.claude/commands/"
+    command_count=$(find "$SCRIPT_DIR/commands" -type f -name '*.md' | wc -l | tr -d ' ')
     echo "   ✅ Copied ${command_count} commands"
 fi
 
@@ -179,9 +185,9 @@ echo ""
 echo "📊 Installed components:"
 echo "   • Hooks (agent-router, codex/gemini integration)"
 echo "   • Delegation rules (codex-delegation, gemini-delegation)"
-echo "   • Skills (startproject, codex-system, gemini-system, research-lib, subagent-driven-development,"
-echo "            sin-task, para-task, parallel-workflow, research)"
-echo "   • Commands (research)"
+echo "   • Skills (requirements, startproject, sin-task, para-task, plan, research, research-lib,"
+echo "            codex-system, gemini-system, parallel-workflow, subagent-driven-development,"
+echo "            lang-go, lang-python, lang-typescript)"
 echo "   • Codex CLI configuration"
 echo "   • Gemini CLI configuration"
 echo ""

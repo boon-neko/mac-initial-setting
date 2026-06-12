@@ -27,29 +27,35 @@ def validate_input(file_path: str, content: str) -> bool:
     return True
 
 
-# セッションの変更を追跡するステートファイル
-STATE_FILE = "/tmp/claude-code-implementation-state.json"
+# 変更追跡のステートファイル（セッションIDごとに分離し、並行セッションの混線を防ぐ）
+STATE_FILE_PREFIX = "/tmp/claude-code-implementation-state-"
+
+
+def state_file_path(session_id: str) -> str:
+    """セッション固有のステートファイルパスを返す."""
+    safe = "".join(c for c in session_id if c.isalnum() or c in "-_") or "default"
+    return f"{STATE_FILE_PREFIX}{safe}.json"
 
 # レビューを提案するしきい値
 MIN_FILES_FOR_REVIEW = 3
 MIN_LINES_FOR_REVIEW = 100
 
 
-def load_state() -> dict:
+def load_state(path: str) -> dict:
     """セッションステートを読み込む."""
     try:
-        if os.path.exists(STATE_FILE):
-            with open(STATE_FILE) as f:
+        if os.path.exists(path):
+            with open(path) as f:
                 return json.load(f)
     except Exception:
         pass
     return {"files_changed": [], "total_lines": 0, "review_suggested": False}
 
 
-def save_state(state: dict):
+def save_state(path: str, state: dict):
     """セッションステートを保存する."""
     try:
-        with open(STATE_FILE, "w") as f:
+        with open(path, "w") as f:
             json.dump(state, f)
     except Exception:
         pass
@@ -101,19 +107,20 @@ def main():
         if not any(file_path.endswith(ext) for ext in [".py", ".ts", ".js", ".tsx", ".jsx", ".go", ".rs"]):
             sys.exit(0)
 
-        # ステートを読み込んで更新
-        state = load_state()
+        # セッション固有のステートを読み込んで更新
+        state_path = state_file_path(data.get("session_id", "default"))
+        state = load_state(state_path)
         if file_path not in state["files_changed"]:
             state["files_changed"].append(file_path)
         state["total_lines"] += count_lines(content)
-        save_state(state)
+        save_state(state_path, state)
 
         # レビューを提案すべきかチェック
         should_review, reason = should_suggest_review(state)
 
         if should_review:
             state["review_suggested"] = True
-            save_state(state)
+            save_state(state_path, state)
 
             output = {
                 "hookSpecificOutput": {

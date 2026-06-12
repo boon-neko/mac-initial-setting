@@ -7,6 +7,7 @@ for reviewing plans and implementation strategies.
 """
 
 import json
+import os
 import sys
 
 # 計画/設計作業を示唆するタスク説明
@@ -49,8 +50,8 @@ def main():
         data = json.load(sys.stdin)
         tool_name = data.get("tool_name", "")
 
-        # Taskツールのみ処理
-        if tool_name != "Task":
+        # サブエージェントツールのみ処理（旧名: Task / 新名: Agent）
+        if tool_name not in ("Task", "Agent"):
             sys.exit(0)
 
         tool_input = data.get("tool_input", {})
@@ -58,19 +59,34 @@ def main():
 
         should_suggest, reason = should_suggest_codex_review(tool_input, tool_output)
 
-        if should_suggest:
-            output = {
-                "hookSpecificOutput": {
-                    "hookEventName": "PostToolUse",
-                    "additionalContext": (
-                        f"[Codex Review Suggestion] {reason}. "
-                        "Consider having Codex review this plan for potential improvements. "
-                        "**Recommended**: Use Task tool with subagent_type='general-purpose' "
-                        "to consult Codex and preserve main context."
-                    )
-                }
+        if not should_suggest:
+            sys.exit(0)
+
+        # セッションごとに1回だけ提案する（形骸化防止）
+        session_id = "".join(
+            c for c in data.get("session_id", "default") if c.isalnum() or c in "-_"
+        ) or "default"
+        flag_file = f"/tmp/claude-codex-plan-review-{session_id}"
+        if os.path.exists(flag_file):
+            sys.exit(0)
+        try:
+            with open(flag_file, "w") as f:
+                f.write("1")
+        except Exception:
+            pass
+
+        output = {
+            "hookSpecificOutput": {
+                "hookEventName": "PostToolUse",
+                "additionalContext": (
+                    f"[Codex Review Suggestion] {reason}. "
+                    "Consider having Codex review this plan for potential improvements. "
+                    "**Recommended**: Use Task tool with subagent_type='general-purpose' "
+                    "to consult Codex and preserve main context."
+                )
             }
-            print(json.dumps(output))
+        }
+        print(json.dumps(output))
 
         sys.exit(0)
 

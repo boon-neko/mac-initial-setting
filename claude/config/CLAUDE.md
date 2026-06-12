@@ -6,13 +6,13 @@ This document defines the project's rules, objectives, and progress management m
 
 - To maximize efficiency, **if you need to execute multiple independent processes, invoke those tools concurrently, not sequentially**.
 - **You must think exclusively in English**. However, you are required to **respond in Japanese**.
-- To understand how to use a library, **always use the Contex7 MCP** to retrieve the latest information.
+- To understand how to use a library, **always use the Context7 MCP** to retrieve the latest information.
 
 ## Programming Rules
 
 - Avoid hard-coding values unless absolutely necessary.
-- When coding in Go, please do not use `any` or `interface{}` for argument types except for generic utility functions.**
-- When writing comments for code, please write them in Japanese.**
+- When coding in Go, please do not use `any` or `interface{}` for argument types except for generic utility functions.
+- When writing comments for code, please write them in Japanese.
 
 ## Skill Creation Rules
 

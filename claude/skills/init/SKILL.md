@@ -47,6 +47,11 @@ Use AskUserQuestion tool to ask:
 4. **Branch naming convention**: e.g., `feature/{number}-{name}`, `feat/{name}`, `issue/{number}`, other?
 5. **Main branch name**: `main` or `master` or other?
 6. **Research/docs output directory**: Where to save research reports? (e.g., `docs/research/`, `.claude/docs/research/`, or none)
+7. **Reviewer**: 計画・実装レビューの実行手段は？
+   - `codex` (Recommended): Codex CLI でレビュー（要 `codex` インストール）
+   - `claude-subagent`: 別コンテキストの Claude サブエージェントでレビュー（Codex CLI が使えない現場向け）
+   - `human`: レビュー資料を整形して人間がレビュー
+   - 環境を確認し、Codex CLI が無い場合は `claude-subagent` を推奨先頭にする
 
 ### 4. Write CLAUDE.md
 
@@ -84,6 +89,7 @@ Generate or update CLAUDE.md with the following sections. If CLAUDE.md already e
 - **Branch Naming**: {Pattern}
 - **Main Branch**: {Branch name}
 - **Research Output**: {Path or "none"}
+- **Reviewer**: {codex | claude-subagent | human}
 ```
 
 ### 5. Check Unnecessary Rules

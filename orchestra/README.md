@@ -48,6 +48,28 @@ gemini login
 
 ## プロジェクトへの導入
 
+### 方法A: Claude Code Plugin（推奨）
+
+orchestra は Claude Code plugin になっており、コピーせずに導入できる（**乖離が起きない**）:
+
+```bash
+# marketplace を登録（ローカルパス or GitHub repo）
+claude plugin marketplace add /path/to/mac-initial-setting
+# または: claude plugin marketplace add your-username/mac-initial-setting
+
+# インストール（--scope user: 全プロジェクト / --scope project: このプロジェクトのみ）
+claude plugin install orchestra@mac-initial-setting
+```
+
+- skills は `/orchestra:sin-task` のように **plugin 名の名前空間付き**で呼び出す
+- hooks は plugin が自動で有効化する（settings.json へのマージ不要）
+- 改善はこのリポジトリに push → 各現場で `claude plugin update orchestra` で反映
+- `.codex/` `.gemini/` 設定と `lint-config.json` は plugin に含まれないため、
+  必要なら `setup-orchestra.sh` で別途配布する（hooks/skills のコピーはスキップしてよい）
+- 導入後、プロジェクトの規約設定として `/init` を実行する
+
+### 方法B: コピー方式（plugin を使わない場合）
+
 ```bash
 # mac-initial-setting リポジトリをクローン
 git clone https://github.com/your-username/mac-initial-setting.git
@@ -56,11 +78,9 @@ git clone https://github.com/your-username/mac-initial-setting.git
 /path/to/mac-initial-setting/orchestra/setup-orchestra.sh .
 ```
 
-### セットアップ内容
-
 スクリプトは以下を行います：
 
-1. `.claude/hooks/` に 8 つのフックスクリプトをコピー
+1. `.claude/hooks/` に 9 つのフックスクリプトをコピー
 2. `.claude/rules/` にデリゲーションルールをコピー
 3. `.claude/docs/research/` と `.claude/logs/` を作成
 4. `.claude/lint-config.json` をコピー
@@ -82,6 +102,7 @@ your-project/
 │   │   ├── check-codex-before-write.py
 │   │   ├── suggest-gemini-research.py
 │   │   ├── check-codex-after-plan.py
+│   │   ├── require-plan-before-worktree.py
 │   │   ├── post-implementation-review.py
 │   │   ├── post-test-analysis.py
 │   │   ├── lint-on-save.py
@@ -107,11 +128,12 @@ your-project/
 
 | Hook | Trigger | 動作 |
 |------|---------|------|
-| agent-router.py | UserPromptSubmit | ユーザー入力を分析してCodex/Geminiを提案 |
-| check-codex-before-write.py | PreToolUse (Edit/Write) | 設計的な変更前にCodex相談を提案 |
+| agent-router.py | UserPromptSubmit | ユーザー入力を分析してCodex/Geminiを提案（セッション毎・エージェント毎に1回） |
+| check-codex-before-write.py | PreToolUse (Edit/Write) | 設計的な変更前にCodex相談を提案（セッション毎に最大3回） |
 | suggest-gemini-research.py | PreToolUse (WebSearch/Fetch) | リサーチ系タスクでGeminiを提案 |
-| check-codex-after-plan.py | PostToolUse (Task) | 計画完了後にCodexレビューを提案 |
-| post-implementation-review.py | PostToolUse (Edit/Write) | 大規模実装後にレビューを提案 |
+| check-codex-after-plan.py | PostToolUse (Task/Agent) | 計画完了後にCodexレビューを提案（セッション毎に1回） |
+| require-plan-before-worktree.py | PreToolUse (Task/Agent) | **唯一のブロッキングフック**: 要件定義(AC)+ユーザー承認なしのWorktree実装委譲を exit 2 でブロック |
+| post-implementation-review.py | PostToolUse (Edit/Write) | 大規模実装後にレビューを提案（セッションID毎にステート分離） |
 | post-test-analysis.py | PostToolUse (Bash) | テスト失敗時にCodexデバッグを提案 |
 | lint-on-save.py | PostToolUse (Edit/Write) | ファイル保存時にlinterを実行 |
 | log-cli-tools.py | PostToolUse (Bash) | Codex/Gemini呼び出しをログ記録 |
