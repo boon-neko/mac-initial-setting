@@ -1,9 +1,10 @@
 ---
-name: init
+name: flow-init
 description: |
-  Analyze project structure, detect tech stack, and establish workflow conventions in CLAUDE.md.
-  Run this at the start of a new project to bootstrap project-specific configuration.
-disable-model-invocation: true
+  Analyze project structure, detect tech stack, and establish workflow conventions
+  (task management, branch naming, merge method, reviewer) in CLAUDE.md.
+  Use when bootstrapping a new project or when Workflow Conventions are missing from CLAUDE.md.
+  Note: distinct from the built-in /init (CLAUDE.md generator) — this one sets Workflow Conventions.
 ---
 
 # Initialize Project Configuration
@@ -52,6 +53,10 @@ Use AskUserQuestion tool to ask:
    - `claude-subagent`: 別コンテキストの Claude サブエージェントでレビュー（Codex CLI が使えない現場向け）
    - `human`: レビュー資料を整形して人間がレビュー
    - 環境を確認し、Codex CLI が無い場合は `claude-subagent` を推奨先頭にする
+8. **Merge method**: 完了した変更のマージ方式は？
+   - `local-merge`: feature ブランチをローカルでメインブランチにマージ（ソロ開発向け）
+   - `pull-request`: push して PR/MR を作成し、レビュー承認後にマージ（チーム開発・branch protection あり）
+   - リポジトリに branch protection や既存PRの形跡があれば `pull-request` を推奨先頭にする
 
 ### 4. Write CLAUDE.md
 
@@ -90,7 +95,11 @@ Generate or update CLAUDE.md with the following sections. If CLAUDE.md already e
 - **Main Branch**: {Branch name}
 - **Research Output**: {Path or "none"}
 - **Reviewer**: {codex | claude-subagent | human}
+- **Merge Method**: {local-merge | pull-request}
+- **Wrapper Model**: haiku（委譲サブエージェントの既定。判定を運ぶ係は sonnet 以上。エイリアスのみ）
 ```
+
+※ Wrapper Model はデフォルト値をそのまま書いてよい（質問不要）。変えたい現場だけ編集する。
 
 ### 5. Check Unnecessary Rules
 
@@ -107,4 +116,4 @@ Report to user (in Japanese):
 - Established workflow conventions
 - Updated sections in CLAUDE.md
 - Recommended rules to remove (if any)
-- Remind: Other skills (`/sin-task`, `/para-task`) will read these conventions from CLAUDE.md
+- Remind: Other skills (`/orchestra:sin-task`, `/orchestra:para-task`) will read these conventions from CLAUDE.md

@@ -13,6 +13,7 @@ metadata:
 CLAUDE.md の「Workflow Conventions」から以下を読み取ること:
 - **Branch Naming**: ブランチ命名規則
 - **Main Branch**: メインブランチ名
+- **Merge Method**: マージ方式（local-merge / pull-request）
 
 ## サブエージェント実装: Worktree + Feature Branch
 
@@ -39,6 +40,9 @@ git push origin {MAIN_BRANCH}
 git branch -d {ブランチ名}
 git push origin --delete {ブランチ名}
 ```
+
+**Merge Method が `pull-request` の現場では**、Step 5 の merge の代わりに
+`gh pr create`（本文にAC検証表を含める）で PR を作成し、マージはレビュー承認後に現場ルールで行う。
 
 **絶対にやらないこと**:
 - worktreeからメインブランチにファイルを`cp`してメインブランチに直接コミット

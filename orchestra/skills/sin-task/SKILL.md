@@ -14,13 +14,14 @@ metadata:
 ## Prerequisites
 
 CLAUDE.md にプロジェクトのワークフロー規約が定義されていること。
-未定義の場合は先に `/init` を実行してプロジェクト規約を設定する。
+未定義の場合は先に `/orchestra:flow-init` を実行してプロジェクト規約を設定する。
 
 CLAUDE.md から以下を読み取る:
 - **Task Management**: タスク管理ツール (GitHub Issues / GitLab / Jira / etc.)
 - **Task File Location**: タスクファイルの場所 (あれば)
 - **Branch Naming**: ブランチ命名規則
 - **Main Branch**: メインブランチ名
+- **Merge Method**: マージ方式（local-merge / pull-request。未定義なら local-merge）
 - **Reviewer**: レビュー実行手段（codex / claude-subagent / human。未定義なら codex）
 
 ## 引数
@@ -44,20 +45,22 @@ CLAUDE.md から以下を読み取る:
 ### Step 0: プロジェクト規約の読み取り
 
 CLAUDE.md の「Workflow Conventions」セクションを読む。
-存在しない場合は「`/init` を先に実行してください」とユーザーに伝えて停止。
+存在しない場合は「`/orchestra:flow-init` を先に実行してください」とユーザーに伝えて停止。
 
 以下の変数を取得:
 - `TASK_TOOL`: タスク管理ツール
 - `TASK_DIR`: タスクファイルの場所（なければ空）
 - `BRANCH_PATTERN`: ブランチ命名規則
 - `MAIN_BRANCH`: メインブランチ名
+- `MERGE_METHOD`: マージ方式（未定義なら local-merge）
 
 ### Step 1: タスク情報収集
 
-タスク管理ツールに応じたコマンドでIssue/タスクを確認:
+タスク管理ツールに応じてIssue/タスクを取得:
 - GitHub Issues: `gh issue view $ARGUMENTS`
 - GitLab: `glab issue view $ARGUMENTS`
-- その他: ユーザーにタスク内容を確認
+- Jira / Linear / Notion 等: 接続済みの MCP サーバーがあればそれで取得（ToolSearch で `jira` `linear` 等を検索）
+- 取得手段がない場合: ユーザーにタスク内容の貼り付けを依頼
 
 タスクファイルがあれば読む（TASK_DIRが定義されている場合）。
 
@@ -106,6 +109,12 @@ git checkout -b {BRANCH_PATTERN に基づくブランチ名}
 
 ### Step 5: 実装開始
 
+実装に入る前に、ユーザーに `/goal` の設定を提案する（ネイティブの完走保証。条件を満たすまでセッションが終了しなくなる）:
+
+```
+/goal {タスク番号} の全ACが PASS の検証結果表付きで完了報告される
+```
+
 CLAUDE.md の開発ルールに従って実装を進める:
 - Understand → Design → Test → Code → Verify
 - テストはACから書く（AC → テストケースの対応を保つ）
@@ -113,7 +122,9 @@ CLAUDE.md の開発ルールに従って実装を進める:
 - 完了後に Codex Review（startproject Phase 6 の要件適合形式: AC毎に PASS/FAIL + スコープ外変更チェック）
   → 動作確認（検証方法の表の「手動確認」分を実施）→ Merge
 
-### Step 6: マージ
+### Step 6: マージ（MERGE_METHOD で分岐）
+
+**local-merge（ソロ開発）の場合:**
 
 ```bash
 git checkout {MAIN_BRANCH}
@@ -123,7 +134,20 @@ git branch -d {ブランチ名}
 ```
 
 タスクファイルがあればステータスを `✅ 完了` に更新。
-完了報告は**ACごとの検証結果表**（startproject Phase 6 のフォーマット）で行う。
+
+**pull-request（チーム開発）の場合:**
+
+```bash
+git push -u origin {ブランチ名}
+gh pr create --title "{タイトル}" --body "{本文}"   # GitLab なら glab mr create
+```
+
+- **PR本文にACごとの検証結果表を含める**（レビュアーへの説明資料になる）
+- **自分でマージしない** — レビュー承認後のマージは現場のルールに従う
+- タスクファイルがあればステータスを `👀 レビュー待ち` に更新
+
+どちらの場合も、完了報告は**ACごとの検証結果表**（startproject Phase 6 のフォーマット）で行う。
+レビューで指摘が複数出たタスクでは、`/retro` での振り返りを提案する。
 
 ## IMPORTANT
 
@@ -131,4 +155,4 @@ git branch -d {ブランチ名}
 - 工程の省略判断は Step 1.5 のトリアージでのみ行う（その場の判断で工程を飛ばさない）
 - 規模に関わらず、ACの文書化・ユーザー承認・要件適合レビューは省略しない
 - ユーザー承認なしに実装に入らない（承認は plan mode の承認または明示的な「OK」。曖昧な相槌を承認と見なさない）
-- CLAUDE.md に規約がなければ `/init` を促す
+- CLAUDE.md に規約がなければ `/orchestra:flow-init` を促す

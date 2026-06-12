@@ -1,7 +1,6 @@
 ---
 name: plan
 description: Create a detailed implementation plan for a feature or task. Use when user wants to plan before coding.
-disable-model-invocation: true
 ---
 
 # Create Implementation Plan
@@ -83,7 +82,7 @@ Break into small steps:
 
 - Plans should be at actionable granularity
 - Include verification method for each step
-- ACが未定義なら、先に `requirements` スキル（plugin では `/orchestra:requirements`）で定義し、その成果物を転記する
+- ACが未定義なら、先に `/requirements` スキルで定義し、その成果物を転記する
 - 全てのステップがいずれかのACに対応していること（対応しないステップはスコープ見直しのサイン）
 - Ask questions at planning stage for unclear points
 - Don't over-detail (adjust during implementation)

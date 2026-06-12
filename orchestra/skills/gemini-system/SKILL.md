@@ -12,7 +12,7 @@ metadata:
 
 # Gemini System — Research & Multimodal Specialist
 
-**Gemini CLI (gemini-3-pro-preview) is your research specialist with 1M token context.**
+**Gemini CLI is your research specialist with a massive context window.**（モデルは `.gemini/settings.json` 側の設定に従う）
 
 > **詳細ルール**: `.claude/rules/gemini-delegation.md`
 
@@ -65,6 +65,7 @@ metadata:
 Task tool parameters:
 - subagent_type: "general-purpose"
 - run_in_background: true (optional, for parallel work)
+- model: haiku   # 輸送係（CLI実行→全文保存→要約）。全文はファイルに残るため安いモデルで十分
 - prompt: |
     Research: {topic}
 

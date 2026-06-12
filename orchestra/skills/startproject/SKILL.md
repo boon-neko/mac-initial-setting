@@ -56,6 +56,18 @@ Phase 6: Spec Compliance & Quality Review (Codex)
 `claude-subagent` の場合は `codex exec` を介さず、同じプロンプトをサブエージェント自身への指示にする。
 `human` の場合は同じ観点リストを資料としてユーザーに渡す。
 
+### レビューの不変条件（全 Reviewer 共通）
+
+- **自己採点禁止**: per-AC の PASS/FAIL を判定するのは Reviewer であり、実装したメインセッション自身ではない
+- **fail-closed**: Reviewer の実行に失敗した場合（CLI未導入・認証切れ・タイムアウト等）、レビューを静かにスキップしない。
+  別 Reviewer へのフォールバックは**ユーザーに明示して承認を得てから**。レビューなしで完了報告に進まない
+- **判定は要約しない**: サブエージェントは Reviewer の判定部分（per-AC PASS/FAIL、REQUEST_CHANGES の理由）を
+  **verbatim（原文のまま）**で返す。要約してよいのは補足説明のみ。小型モデルの失敗は「省略」の形で起きる
+- **生出力の保全**: レビューの生出力を `.claude/docs/reviews/` に保存してから要約を返す
+- **サブエージェントのモデルはエイリアスのみ**（haiku / sonnet 等。バージョン付きIDを書かない）。
+  既定: 輸送係（CLI実行→保存→要約）= haiku、レビュー判定を運ぶ係 = sonnet 以上。
+  CLAUDE.md の Workflow Conventions に `Wrapper Model` があればそれを優先
+
 ---
 
 ## Phase 1: Gemini Research (Background)
@@ -66,6 +78,7 @@ Phase 6: Spec Compliance & Quality Review (Codex)
 Task tool parameters:
 - subagent_type: "general-purpose"
 - run_in_background: true
+- model: haiku   # 輸送係（CLI実行→全文保存→要約）は安いモデルで十分
 - prompt: |
     Research for: {feature}
 
@@ -88,7 +101,7 @@ Task tool parameters:
 
 ## Phase 2: Requirements Definition (Claude)
 
-**`requirements` スキル（plugin では `/orchestra:requirements`）を実行し、要件定義書を作成する。**
+**`/requirements` スキルを実行し、要件定義書を作成する。**
 
 requirements スキルが行うこと（フォーマットとルールの正はスキル本体）:
 
@@ -182,6 +195,7 @@ priority     ENUM('normal', 'priority', 'urgent')                    -- 優先�
 Task tool parameters:
 - subagent_type: "general-purpose"
 - run_in_background: true
+- model: sonnet   # レビュー判定を運ぶ係は中位以上（判定は verbatim で返す）
 - prompt: |
     Review requirements and plan for: {feature}
 
@@ -208,10 +222,11 @@ Task tool parameters:
        6. Approach assessment, risks, implementation order
        " 2>/dev/null
 
-    2. Return CONCISE summary:
-       - Requirements issues (must resolve before implementation)
-       - AC coverage gaps / scope creep
-       - Top 3-5 plan recommendations
+    2. Save the raw output to: .claude/docs/reviews/{YYYY-MM-DD}-{feature}-plan.md
+
+    3. Return:
+       - Requirements issues / AC coverage gaps / scope creep: **verbatim（原文のまま）**
+       - Top 3-5 plan recommendations: 要約可
 ```
 
 **要件側の指摘（曖昧・解釈分岐・暗黙の前提）が出た場合は Phase 2 に戻り、
@@ -285,6 +300,7 @@ diffだけ渡して「良いコードか」を聞くのは不十分。**必ず P
 ```
 Task tool parameters:
 - subagent_type: "general-purpose"
+- model: sonnet   # レビュー判定を運ぶ係は中位以上（判定は verbatim で返す）
 - prompt: |
     Review implementation for: {feature}
 
@@ -316,7 +332,9 @@ Task tool parameters:
        Return: APPROVE or REQUEST_CHANGES, including the per-AC table.
        " 2>/dev/null
 
-    4. Return verdict + per-AC table + key findings
+    4. Save the raw output to: .claude/docs/reviews/{YYYY-MM-DD}-{feature}.md
+
+    5. Return verdict + per-AC table（**verbatim** — 要約・意訳しない）+ key findings
 ```
 
 - **APPROVE** → 検証方法の表に従い、手動確認分の動作確認を実施 → 完了報告

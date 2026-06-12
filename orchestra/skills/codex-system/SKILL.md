@@ -55,6 +55,7 @@ metadata:
 Task tool parameters:
 - subagent_type: "general-purpose"
 - run_in_background: true (optional, for parallel work)
+- model: sonnet   # エイリアスのみ使用。判定を運ぶ係は中位以上
 - prompt: |
     Consult Codex about: {topic}
 
@@ -63,7 +64,17 @@ Task tool parameters:
     " 2>/dev/null
 
     Return CONCISE summary (key recommendation + rationale).
+    レビュー依頼の場合: 判定（PASS/FAIL・REQUEST_CHANGES理由）は verbatim で返し、
+    生出力を .claude/docs/reviews/ に保存する。
 ```
+
+### Review Integrity Rules
+
+- **判定は要約しない**: per-AC PASS/FAIL や REQUEST_CHANGES の理由は **verbatim** で返す（要約は補足のみ）
+- **生出力の保全**: レビュー生出力を `.claude/docs/reviews/` に保存してから返す
+- **fail-closed**: codex 実行が失敗したら静かにスキップしない。フォールバック（claude-subagent 等）は
+  ユーザーに明示して承認を得る
+- **モデルはエイリアスのみ**（haiku/sonnet 等）。バージョン付きモデルIDを書かない
 
 ### Direct Call (Short Questions Only)
 
