@@ -33,15 +33,10 @@ setup_claude() {
     bash "${SCRIPT_DIR}/setup-claude.sh"
 }
 
-# Orchestra セットアップ
+# Orchestra セットアップ（呼び出し時に claude-orchestra リポジトリをクローンして導入）
+ORCHESTRA_REPO="https://github.com/boon-neko/claude-orchestra.git"
+
 setup_orchestra() {
-    local ORCHESTRA_SCRIPT="${SCRIPT_DIR}/orchestra/setup-orchestra.sh"
-
-    if [ ! -f "$ORCHESTRA_SCRIPT" ]; then
-        echo "  ❌ orchestra/setup-orchestra.sh が見つかりません"
-        return 1
-    fi
-
     echo ""
     read -p "📂 対象プロジェクトのパスを入力してください（デフォルト: カレントディレクトリ）: " orchestra_target
     orchestra_target="${orchestra_target:-.}"
@@ -52,8 +47,32 @@ setup_orchestra() {
         return 1
     fi
 
+    # orchestra は別リポジトリ。ローカルクローンがあればそれを使い、なければ一時ディレクトリにクローンする
+    local orchestra_dir=""
+    local tmp_clone=""
+    if [ -f "${HOME}/Development/claude-orchestra/setup-orchestra.sh" ]; then
+        orchestra_dir="${HOME}/Development/claude-orchestra"
+        echo "  📦 ローカルの claude-orchestra を使用します: ${orchestra_dir}"
+    else
+        tmp_clone="$(mktemp -d)/claude-orchestra"
+        echo "  📦 claude-orchestra をクローンします: ${ORCHESTRA_REPO}"
+        if ! git clone --depth 1 "$ORCHESTRA_REPO" "$tmp_clone"; then
+            echo "  ❌ クローンに失敗しました: ${ORCHESTRA_REPO}"
+            return 1
+        fi
+        orchestra_dir="$tmp_clone"
+    fi
+
     echo ""
-    bash "$ORCHESTRA_SCRIPT" "$orchestra_target"
+    bash "${orchestra_dir}/setup-orchestra.sh" "$orchestra_target"
+    local result=$?
+
+    # 一時クローンは削除
+    if [ -n "$tmp_clone" ]; then
+        rm -rf "$(dirname "$tmp_clone")"
+    fi
+
+    return $result
 }
 
 # VS Code セットアップ

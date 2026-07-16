@@ -9,9 +9,11 @@
 | `setup.sh` | セットアップメニュー（各スクリプトの入口） |
 | `setup-claude.sh` | Claude Code グローバル設定を `~/.claude/` にコピー |
 | `claude/` | グローバル設定の実体（CLAUDE.md・エージェント・汎用スキル） |
-| `orchestra/` | **開発フロー plugin**（AC駆動フロー + Codex/Gemini 協調）。このリポジトリは plugin marketplace を兼ねる |
 | `vscode/` | VS Code 設定・拡張機能 |
 | `zshrc` | zsh 設定 |
+
+**開発フロー plugin（orchestra）は別リポジトリ [boon-neko/claude-orchestra](https://github.com/boon-neko/claude-orchestra) に分離した。**
+plugin marketplace 登録時にクローンされて導入される（下記 Step 2）。
 
 セットアップの流れ: **① Mac 基本設定 → ② ユーティリティ/開発ツール → ③ Claude Code（グローバル設定 + orchestra plugin）→ ④ 現場プロジェクトごとに `/orchestra:flow-init`**
 
@@ -104,16 +106,18 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 | メニュー | 内容 |
 |----------|------|
 | **1) Claude Code 基本設定** | `~/.claude/` にグローバル設定（CLAUDE.md・エージェント・汎用スキル）をコピー。mise / gh の導入確認も行う |
-| **2) Orchestra セットアップ** | 対象プロジェクトに `.codex/` `.gemini/` `lint-config.json` を配置（plugin を使わない場合は hooks/skills のコピーも） |
+| **2) Orchestra セットアップ** | **claude-orchestra リポジトリを呼び出し時にクローン**し、対象プロジェクトに `.codex/` `.gemini/` `lint-config.json` を配置（plugin を使わない場合は hooks/skills のコピーも） |
 | **3) ディスプレイ解像度設定** | 1800x1169 に変更 |
 | **4) VS Code セットアップ** | 設定・拡張機能の一括インストール |
 | **5) すべてインストール** | 上記すべて |
 
 **Step 2: orchestra plugin の導入**（開発フロー本体。全プロジェクト共通なので Mac ごとに1回）
 
+plugin は別リポジトリ。marketplace 登録時にクローンされ、更新は `claude plugin update orchestra` で取り込む:
+
 ```shell
-claude plugin marketplace add boon-neko/mac-initial-setting   # ローカルクローンのパス指定でも可
-claude plugin install orchestra@mac-initial-setting
+claude plugin marketplace add boon-neko/claude-orchestra   # ローカルクローンのパス指定でも可
+claude plugin install orchestra@claude-orchestra
 # Claude Code を再起動して反映
 ```
 
@@ -138,19 +142,24 @@ claude
 タスク管理ツール・ブランチ規則・マージ方式（PR or ローカルマージ）・レビュアーを質問して
 CLAUDE.md の Workflow Conventions に書き込む。**以降のフロースキルは全てこれを読んで動く。**
 
-`.codex/` `.gemini/` 設定が必要なら `./orchestra/setup-orchestra.sh /path/to/project` も実行する。
+`.codex/` `.gemini/` 設定が必要なら `./setup.sh` のメニュー 2（Orchestra セットアップ。
+claude-orchestra を呼び出し時にクローンして実行）を使う。
 
-## Claude Code Orchestra（開発フロー plugin）
+## Claude Code Orchestra（開発フロー plugin・別リポジトリ）
 
-AC駆動の開発フロー — **要件を受け入れ条件（AC）として文書化 → 計画 → レビュー → 実装 →
-AC毎の要件適合レビュー → AC検証表で完了報告** — と、Codex CLI（レビュー）/ Gemini CLI（リサーチ）の
-協調をまとめた plugin。日常の入口は `/orchestra:sin-task {issue番号}`（単体）/ `/orchestra:para-task {issue番号}`（並行）。
+AC駆動の開発フロー — **設計ステージ（要件定義 → ドメイン知識 → 情報収集 → 正常系/異常系の動作洗い出し →
+システム構成・データ管理 → 設計レビュー）→ 計画 → 実装 → AC毎の要件適合レビュー → AC検証表で完了報告** — と、
+Codex CLI（レビュー）/ Gemini CLI（リサーチ）の協調をまとめた plugin。
+日常の入口は `/orchestra:sin-task {issue番号}`（単体）/ `/orchestra:para-task {issue番号}`（並行）、
+設計だけ回すなら `/orchestra:design {feature}`。
 
 | カテゴリ | 内容 |
 |----------|------|
-| **Skills (16)** | flow-init / requirements / startproject / sin-task / para-task / plan / retro / research / research-lib / codex-system / gemini-system / parallel-workflow / subagent-driven-development / lang-go / lang-python / lang-typescript |
+| **設計ステージ Skills (8)** | design（一括ラッパー）/ design-core（共通基盤）/ requirements / domain-knowledge / info-gathering / behavior-analysis / system-design / design-review |
+| **フロー・その他 Skills (15)** | flow-init / startproject / sin-task / para-task / plan / retro / research / research-lib / codex-system / gemini-system / parallel-workflow / subagent-driven-development / lang-go / lang-python / lang-typescript |
 | **Hooks (10)** | 入口ゲート（承認なしの実装委譲をブロック）+ 出口ゲート（AC検証表のない完了宣言を差し戻し）+ 提案系8本 |
 | **Agents** | general-purpose（Codex/Gemini を直接呼べる委譲用サブエージェント） |
 
-**スキル一覧・hooks・Model Policy・`/goal` 併用などの詳細は [orchestra/README.md](orchestra/README.md) を参照**
+**スキル一覧・hooks・Model Policy・`/goal` 併用などの詳細は
+[boon-neko/claude-orchestra](https://github.com/boon-neko/claude-orchestra) の README を参照**
 （フローの全体像はそちらだけで分かるようにしてある）。
