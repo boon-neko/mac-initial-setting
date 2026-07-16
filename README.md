@@ -113,7 +113,7 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 
 **Step 2: orchestra plugin の導入**（開発フロー本体。全プロジェクト共通なので Mac ごとに1回）
 
-plugin は別リポジトリ。marketplace 登録時にクローンされ、更新は `claude plugin update orchestra` で取り込む:
+plugin は別リポジトリ。marketplace 登録時にクローンされ、更新は `claude plugin update orchestra@ai-driven-skills` で取り込む:
 
 ```shell
 claude plugin marketplace add boon-neko/ai-driven-skills   # ローカルクローンのパス指定でも可
