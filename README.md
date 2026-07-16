@@ -12,7 +12,7 @@
 | `vscode/` | VS Code 設定・拡張機能 |
 | `zshrc` | zsh 設定 |
 
-**開発フロー plugin（orchestra）は別リポジトリ [boon-neko/claude-orchestra](https://github.com/boon-neko/claude-orchestra) に分離した。**
+**開発フロー plugin（orchestra）は別リポジトリ [boon-neko/ai-driven-skills](https://github.com/boon-neko/ai-driven-skills) に分離した。**
 plugin marketplace 登録時にクローンされて導入される（下記 Step 2）。
 
 セットアップの流れ: **① Mac 基本設定 → ② ユーティリティ/開発ツール → ③ Claude Code（グローバル設定 + orchestra plugin）→ ④ 現場プロジェクトごとに `/orchestra:flow-init`**
@@ -106,7 +106,7 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 | メニュー | 内容 |
 |----------|------|
 | **1) Claude Code 基本設定** | `~/.claude/` にグローバル設定（CLAUDE.md・エージェント・汎用スキル）をコピー。mise / gh の導入確認も行う |
-| **2) Orchestra セットアップ** | **claude-orchestra リポジトリを呼び出し時にクローン**し、対象プロジェクトに `.codex/` `.gemini/` `lint-config.json` を配置（plugin を使わない場合は hooks/skills のコピーも） |
+| **2) Orchestra セットアップ** | **ai-driven-skills リポジトリを呼び出し時にクローン**し、対象プロジェクトに `.codex/` `.gemini/` `lint-config.json` を配置（plugin を使わない場合は hooks/skills のコピーも） |
 | **3) ディスプレイ解像度設定** | 1800x1169 に変更 |
 | **4) VS Code セットアップ** | 設定・拡張機能の一括インストール |
 | **5) すべてインストール** | 上記すべて |
@@ -116,8 +116,8 @@ export PATH=$PATH:$(npm prefix --location=global)/bin
 plugin は別リポジトリ。marketplace 登録時にクローンされ、更新は `claude plugin update orchestra` で取り込む:
 
 ```shell
-claude plugin marketplace add boon-neko/claude-orchestra   # ローカルクローンのパス指定でも可
-claude plugin install orchestra@claude-orchestra
+claude plugin marketplace add boon-neko/ai-driven-skills   # ローカルクローンのパス指定でも可
+claude plugin install orchestra@ai-driven-skills
 # Claude Code を再起動して反映
 ```
 
@@ -143,7 +143,7 @@ claude
 CLAUDE.md の Workflow Conventions に書き込む。**以降のフロースキルは全てこれを読んで動く。**
 
 `.codex/` `.gemini/` 設定が必要なら `./setup.sh` のメニュー 2（Orchestra セットアップ。
-claude-orchestra を呼び出し時にクローンして実行）を使う。
+ai-driven-skills を呼び出し時にクローンして実行）を使う。
 
 ## Claude Code Orchestra（開発フロー plugin・別リポジトリ）
 
@@ -161,5 +161,5 @@ Codex CLI（レビュー）/ Gemini CLI（リサーチ）の協調をまとめ�
 | **Agents** | general-purpose（Codex/Gemini を直接呼べる委譲用サブエージェント） |
 
 **スキル一覧・hooks・Model Policy・`/goal` 併用などの詳細は
-[boon-neko/claude-orchestra](https://github.com/boon-neko/claude-orchestra) の README を参照**
+[boon-neko/ai-driven-skills](https://github.com/boon-neko/ai-driven-skills) の README を参照**
 （フローの全体像はそちらだけで分かるようにしてある）。

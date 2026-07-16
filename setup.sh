@@ -33,8 +33,8 @@ setup_claude() {
     bash "${SCRIPT_DIR}/setup-claude.sh"
 }
 
-# Orchestra セットアップ（呼び出し時に claude-orchestra リポジトリをクローンして導入）
-ORCHESTRA_REPO="https://github.com/boon-neko/claude-orchestra.git"
+# Orchestra セットアップ（呼び出し時に ai-driven-skills リポジトリをクローンして導入）
+ORCHESTRA_REPO="https://github.com/boon-neko/ai-driven-skills.git"
 
 setup_orchestra() {
     echo ""
@@ -50,12 +50,12 @@ setup_orchestra() {
     # orchestra は別リポジトリ。ローカルクローンがあればそれを使い、なければ一時ディレクトリにクローンする
     local orchestra_dir=""
     local tmp_clone=""
-    if [ -f "${HOME}/Development/claude-orchestra/setup-orchestra.sh" ]; then
-        orchestra_dir="${HOME}/Development/claude-orchestra"
-        echo "  📦 ローカルの claude-orchestra を使用します: ${orchestra_dir}"
+    if [ -f "${HOME}/Development/ai-driven-skills/setup-orchestra.sh" ]; then
+        orchestra_dir="${HOME}/Development/ai-driven-skills"
+        echo "  📦 ローカルの ai-driven-skills を使用します: ${orchestra_dir}"
     else
-        tmp_clone="$(mktemp -d)/claude-orchestra"
-        echo "  📦 claude-orchestra をクローンします: ${ORCHESTRA_REPO}"
+        tmp_clone="$(mktemp -d)/ai-driven-skills"
+        echo "  📦 ai-driven-skills をクローンします: ${ORCHESTRA_REPO}"
         if ! git clone --depth 1 "$ORCHESTRA_REPO" "$tmp_clone"; then
             echo "  ❌ クローンに失敗しました: ${ORCHESTRA_REPO}"
             return 1
